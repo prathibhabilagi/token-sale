@@ -2,13 +2,33 @@ pragma solidity ^0.7.4;
 
 contract BtsToken {
 
-    //Constructor
-     uint256 public totalSupply;
+    string public name = "BtsToken";
+    string public symbol = "BTS";
+    string public standard = 'BTS Token v1.0';
+    uint256 public totalSupply;
 
-    constructor() {
-        totalSupply = 1000000;
+    event Transfer(
+        address indexed _from,
+        address indexed _to,
+        uint256 _value
+    );
+
+    mapping(address => uint256) public balanceOf;
+
+    //Constructor    
+    constructor (uint256 _initalSupply) {
+        balanceOf[msg.sender] = _initalSupply;
+        totalSupply = _initalSupply;
     }
 
-    //Set the total number of tokens
-    //Read the total number of tokens
+    function transfer(address _to, uint256 _value) public returns (bool success) {
+        require(balanceOf[msg.sender] >= _value);
+
+        balanceOf[msg.sender] -= _value;
+        balanceOf[_to] += _value;
+
+        emit Transfer(msg.sender, _to, _value);
+
+        return true;
+    }
 }
